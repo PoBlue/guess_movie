@@ -6,20 +6,49 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class GuessMovieGame {
-    public static void main(String [] args) {
-        String movieName = getRandomMovieName();
-        System.out.println(movieName);
 
-        //get string from user input
-//        Scanner scanner = new Scanner(System.in);
-//        String guess  = scanner.next();
+    private String movieName;
+    private StringBuilder outputBuilder;
 
-//        System.out.println(guess);
+    public GuessMovieGame() {
+        movieName = getRandomMovieName();
 
+        String output = movieName.replaceAll("[a-zA-Z]", "_");
+        outputBuilder = new StringBuilder(output);
+
+        welcomeMessage();
+    }
+
+    private void welcomeMessage() {
+        System.out.println(outputBuilder);
+    }
+
+    private void wrongMessage() {
+        System.out.println("wrong");
+    }
+
+    private void rightMessage() {
+        System.out.println("right");
+        System.out.println(outputBuilder);
+    }
+
+    public void guess(char guessChar) {
+        int foundIndex = movieName.indexOf(guessChar);
+
+        if(foundIndex == -1) {
+            wrongMessage();
+        } else {
+            outputBuilder.setCharAt(foundIndex, guessChar);
+            rightMessage();
+        }
+    }
+
+    public boolean isWin() {
+        return outputBuilder.indexOf("_") == -1;
     }
 
     //get random movie name
-    private static String getRandomMovieName() {
+    public String getRandomMovieName() {
         List<String> moviesName = new ArrayList<>();
 
         //read file line by line
