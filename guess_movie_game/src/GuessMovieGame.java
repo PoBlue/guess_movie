@@ -9,9 +9,14 @@ public class GuessMovieGame {
 
     private String movieName;
     private StringBuilder outputBuilder;
+    private int wrongCount = 0;
+    private int mTotalWrongCount;
+    private String wrongChar = "";
 
-    public GuessMovieGame() {
+    public GuessMovieGame(int totalWrongCount) {
+        mTotalWrongCount = totalWrongCount;
         movieName = getRandomMovieName();
+        System.out.println(movieName);
 
         String output = movieName.replaceAll("[a-zA-Z]", "_");
         outputBuilder = new StringBuilder(output);
@@ -24,7 +29,9 @@ public class GuessMovieGame {
     }
 
     private void wrongMessage() {
-        System.out.println("wrong");
+        System.out.println("wrong count: " + wrongCount);
+        System.out.println("wrong Char: " + wrongChar);
+        System.out.println(outputBuilder);
     }
 
     private void rightMessage() {
@@ -36,15 +43,24 @@ public class GuessMovieGame {
         int foundIndex = movieName.indexOf(guessChar);
 
         if(foundIndex == -1) {
+            wrongCount++;
+            wrongChar += String.valueOf(guessChar) + ' ';
             wrongMessage();
         } else {
-            outputBuilder.setCharAt(foundIndex, guessChar);
+            while (foundIndex != -1) {
+                outputBuilder.setCharAt(foundIndex, guessChar);
+                foundIndex = movieName.indexOf(guessChar, foundIndex + 1);
+            }
             rightMessage();
         }
     }
 
     public boolean isWin() {
         return outputBuilder.indexOf("_") == -1;
+    }
+
+    public boolean isFinished() {
+        return this.isWin() || wrongCount >= mTotalWrongCount;
     }
 
     //get random movie name
